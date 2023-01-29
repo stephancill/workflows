@@ -54,3 +54,19 @@ An example workflow is described below. It takes an input message and append mes
   ]
 }
 ```
+
+## Example workflow execution
+
+Copy sample.env to .env and fill in the REPLICATE_API_KEY.
+
+```bash
+cp sample.env .env
+```
+
+```bash
+cd workflow
+```
+
+```bash
+python3 workflow.py examples/img2img-nft.json --CHAIN_ID=1 --ADDRESS=0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03 --TOKEN_ID=1 --INPUT_PROMPT="3d cartoon character" --INPUT_SEED=4
+```
