@@ -7,23 +7,58 @@ import time
 import argparse
 import hashlib
 import requests
+import base64
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--image", help="image to run the prediction on", required=True)
+parser.add_argument("--image", help="data uri of image to run the prediction on")
+parser.add_argument("--image-file", help="location of image to run the prediction on")
 parser.add_argument("--prompt", help="prompt for the prediction", required=True)
 parser.add_argument("--negative_prompt", help="negative prompt for the prediction", default="")
 parser.add_argument("--width", help="width of the image", type=int, default=512)
 parser.add_argument("--height", help="height of the image", type=int, default=512)
 parser.add_argument("--prompt_strength", help="prompt strength for the prediction", type=float, default=0.8)
 parser.add_argument("--num_outputs", help="number of outputs for the prediction", type=int, default=1)
-parser.add_argument("--num_inference_steps", help="number of inference steps for the prediction", type=int, default=25)
+parser.add_argument("--num_inference_steps", help="number of inference steps for the prediction", type=int, default=75)
 parser.add_argument("--guidance_scale", help="guidance scale for the prediction", type=float, default=7.5)
 parser.add_argument("--scheduler", help="scheduler for the prediction", default="DPMSolverMultistep")
 parser.add_argument("--seed", help="seed for the prediction", type=int, default=0)
 args = parser.parse_args()
 
 def main():
+    if not args.image and not args.image_file:
+        raise Exception("You must provide either an image or an image file")
 
+    image = None
+
+    if args.image_file:
+        if args.image_file.endswith(".png"):
+            content_type = "image/png"
+        elif args.image_file.endswith(".jpg") or args.image_file.endswith(".jpeg"):
+            content_type = "image/jpeg"
+        else:
+            raise Exception("Image file must be a png or jpg")
+        
+        with open(args.image_file, "rb") as f:
+            data = f.read()
+            # Base64 encode the image
+            image = f"data:{content_type};base64,{base64.b64encode(data).decode('utf-8')}"
+    else:
+        image = args.image
+    
+    input_str = f"{args.prompt}{args.negative_prompt}{args.width}{args.height}{args.prompt_strength}{args.num_outputs}{args.num_inference_steps}{args.guidance_scale}{args.scheduler}{args.seed}"
+    input_hash = hashlib.sha256(input_str.encode()).hexdigest()
+
+    filename = os.path.join(os.getcwd(), "cache", f"{input_hash}.png")
+
+    # Ensure cache directory exists
+    if not os.path.exists("cache"):
+        os.mkdir("cache")
+
+    # If the file already exists, return it
+    if os.path.exists(filename):
+        print(f"{filename}")
+        return
+    
     api_url = "https://api.replicate.com/v1/predictions"
     headers = {
         "Authorization": f"Token {os.environ['REPLICATE_API_TOKEN']}",
@@ -32,7 +67,7 @@ def main():
     data = {
         "version": "15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d",
         "input": {
-            "image": args.image,
+            "image": image,
             "prompt": args.prompt,
             "negative_prompt": args.negative_prompt,
             "width": args.width,
@@ -46,24 +81,10 @@ def main():
         }
     }
 
-    input_str = f"{args.prompt}{args.negative_prompt}{args.width}{args.height}{args.prompt_strength}{args.num_outputs}{args.num_inference_steps}{args.guidance_scale}{args.scheduler}{args.seed}"
-    input_hash = hashlib.sha256(input_str.encode()).hexdigest()
-
-    filename = os.path.join(os.getcwd(), "cache", f"{input_hash}.png")
-
-    # Ensure cache directory exists
-    if not os.path.exists("cache"):
-        os.mkdir("cache")
-
-    # TODO: Check if this works
-    if os.path.exists(filename):
-        print(f"{filename}")
-        return
-
     response = requests.post(api_url, data=json.dumps(data).encode(), headers=headers)
     response_data = response.json()
 
-    # print(response_data)
+    print(response_data, os.environ)
     prediction_id = response_data["id"]
 
     while True:

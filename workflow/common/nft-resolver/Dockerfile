@@ -3,6 +3,8 @@ FROM node:14-alpine
 
 RUN apk add --no-cache bash
 
+VOLUME /app/cache
+
 # Set the working directory
 WORKDIR /app
 

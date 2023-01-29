@@ -17,23 +17,27 @@
     {
       "name": "INPUT_PROMPT",
       "type": "string"
+    },
+    {
+      "name": "INPUT_SEED",
+      "type": "int"
     }
   ],
-  "outputs": [{ "name": "OUTPUT_IMAGE", "type": "string" }],
+  "outputs": [{ "name": "OUTPUT_IMAGE_FILE", "type": "string" }],
   "packages": [
     {
       "name": "std:nft-resolver",
       "commands": [
-        "export INITIAL_IMAGE=$(node nft-resolver.js --chainId=$CHAIN_ID --tokenAddress=$ADDRESS --tokenId=$TOKEN_ID)"
+        "export INITIAL_IMAGE_FILE=$(node nft-resolver.js --chainId=$CHAIN_ID --tokenAddress=$ADDRESS --tokenId=$TOKEN_ID)"
       ],
-      "exports": ["INITIAL_IMAGE"]
+      "exports": ["INITIAL_IMAGE_FILE"]
     },
     {
       "name": "std:img2img",
       "commands": [
-        "export OUTPUT_IMAGE=\"data:image/png;base64,$(cat $(img2img --image=\"$INITIAL_IMAGE\" --prompt=\"$INPUT_PROMPT\") | base64)\""
+        "export OUTPUT_IMAGE_FILE=\"$(img2img --image-file=\"$INITIAL_IMAGE_FILE\" --prompt=\"$INPUT_PROMPT\" --seed=$INPUT_SEED)\""
       ],
-      "exports": ["OUTPUT_IMAGE"]
+      "exports": ["OUTPUT_IMAGE_FILE"]
     }
   ]
 }

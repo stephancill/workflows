@@ -22,6 +22,12 @@ for input in workflow["inputs"]:
 
 variables_to_save = {x["name"]: parser.parse_args(raw_args[1:]).__getattribute__(x["name"]) for x in workflow["inputs"]}
 
+# Load environment variables from .env file into os.environ dictionary
+with open(".env") as f:
+    for line in f:
+        name, value = line.strip().split("=", 1)
+        variables_to_save[name] = value
+
 # Iterate through the steps in the workflow
 for step in workflow["packages"]:
     # Check if the step is a built-in step or a custom step
