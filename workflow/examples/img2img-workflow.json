@@ -1,0 +1,35 @@
+{
+  "name": "img2img-workflow",
+  "version": "1.0.0",
+  "inputs": [
+    {
+      "name": "INPUT_IMAGE_URL",
+      "type": "string"
+    },
+    {
+      "name": "INPUT_PROMPT",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "OUTPUT_IMAGE",
+      "type": "string"
+    }
+  ],
+  "packages": [
+    {
+      "name": "download-png",
+      "dockerfile": "FROM alpine:latest\nRUN apk add --no-cache bash",
+      "commands": ["export INITIAL_IMAGE=\"data:image/png;base64,$(wget -O - $INPUT_IMAGE_URL | base64)\""],
+      "exports": ["INITIAL_IMAGE"]
+    },
+    {
+      "name": "std:img2img",
+      "commands": [
+        "export OUTPUT_IMAGE=\"data:image/png;base64,$(cat $(img2img --image=\"$INITIAL_IMAGE\" --prompt=\"$INPUT_PROMPT\") | base64)\""
+      ],
+      "exports": ["OUTPUT_IMAGE"]
+    }
+  ]
+}

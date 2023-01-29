@@ -1,0 +1,34 @@
+{
+  "name": "echo-workflow",
+  "version": "1.0.0",
+  "inputs": [
+    {
+      "name": "INPUT_MESSAGE",
+      "type": "string"
+    },
+    {
+      "name": "APPEND_MESSAGE",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "OUTPUT_MESSAGE",
+      "type": "string"
+    }
+  ],
+  "packages": [
+    {
+      "name": "encode-message",
+      "dockerfile": "FROM alpine:latest\nRUN apk add --no-cache bash",
+      "commands": ["export MESSAGE_BASE64=$(echo $INPUT_MESSAGE | base64)"],
+      "exports": ["MESSAGE_BASE64"]
+    },
+    {
+      "name": "decode-and-append-message",
+      "dockerfile": "FROM alpine:latest\nRUN apk add --no-cache bash",
+      "commands": ["export OUTPUT_MESSAGE=\"$(echo $MESSAGE_BASE64 | base64 -d) $APPEND_MESSAGE\""],
+      "exports": ["OUTPUT_MESSAGE"]
+    }
+  ]
+}
