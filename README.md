@@ -22,16 +22,7 @@ An example workflow is described below. It takes an input message and append mes
 {
   "name": "echo-workflow",
   "version": "1.0.0",
-  "inputs": [
-    {
-      "name": "INPUT_MESSAGE",
-      "type": "string"
-    },
-    {
-      "name": "APPEND_MESSAGE",
-      "type": "string"
-    }
-  ],
+  "inputs": ["INPUT_MESSAGE=", "APPEND_MESSAGE=default value"],
   "outputs": [
     {
       "name": "OUTPUT_MESSAGE",
@@ -69,4 +60,44 @@ cd workflow
 
 ```bash
 python3 workflow.py examples/img2img-nft.json --CHAIN_ID=1 --ADDRESS=0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03 --TOKEN_ID=1 --INPUT_PROMPT="3d cartoon character" --INPUT_SEED=4
+```
+
+## Running the example workflow token server
+
+Install yarn deps
+
+```bash
+yarn
+```
+
+Start hardhat node
+
+```bash
+yarn start
+```
+
+In a separate terminal:
+
+Deploy the contracts
+
+```bash
+yarn deploy
+```
+
+Check the logged output of the deploy command for the contract address
+
+```bash
+yarn mint <address>
+```
+
+Install python dependencies
+
+```bash
+pip3 install -r requirements.txt
+```
+
+Start the server
+
+```bash
+FLASK_APP=server.py flask run
 ```

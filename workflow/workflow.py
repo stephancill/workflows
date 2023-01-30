@@ -96,9 +96,13 @@ if __name__ == "__main__":
 
     # Add arguments for each input
     for input in workflow["inputs"]:
-        key, value = input.split("=", 1)
-        parser.add_argument(f"--{key}", default=value)
-
+        inputs_split = input.split("=", 1)
+        key = inputs_split[0]
+        if len(inputs_split) > 1:
+            parser.add_argument(f"--{key}", default=inputs_split[1])
+        else:
+            parser.add_argument(f"--{key}")
+        
     # Parse inputs
     variables_to_save = {x.split("=", 1)[0]: parser.parse_args(raw_args[1:]).__getattribute__(x.split("=", 1)[0]) for x in workflow["inputs"]}
 

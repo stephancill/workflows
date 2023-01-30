@@ -1,16 +1,7 @@
 {
   "name": "img2img-workflow",
   "version": "1.0.0",
-  "inputs": [
-    {
-      "name": "INPUT_IMAGE_URL",
-      "type": "string"
-    },
-    {
-      "name": "INPUT_PROMPT",
-      "type": "string"
-    }
-  ],
+  "inputs": ["INPUT_IMAGE_URL", "INPUT_PROMPT"],
   "outputs": [
     {
       "name": "OUTPUT_IMAGE",
