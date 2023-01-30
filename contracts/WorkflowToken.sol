@@ -20,8 +20,8 @@ contract WorkflowToken is ERC721A, Ownable {
     string version;
   }
 
-  Workflow workflow;
-  Step[] steps;
+  Workflow public workflow;
+  Step[] public steps;
   string[] inputs;
   string[] outputs;
 
@@ -39,7 +39,7 @@ contract WorkflowToken is ERC721A, Ownable {
     workflowJson = string.concat(workflowJson, '"version":"', workflow.version, '",');
     workflowJson = string.concat(workflowJson, '"inputs":[');
     for (uint256 i = 0; i < inputs.length; i++) {
-      workflowJson = string.concat(workflowJson, '{"name":"', inputs[i], '"}');
+      workflowJson = string.concat(workflowJson, '"', inputs[i], '"');
       if (i != inputs.length - 1) {
         workflowJson = string.concat(workflowJson, ",");
       }
@@ -74,7 +74,7 @@ contract WorkflowToken is ERC721A, Ownable {
       '"workflow":',
       workflowJson,
       ', "image": "',
-      string.concat(baseURI, "0x", toAsciiString(address(this)), "/", _toString(_tokenId)),
+      string.concat(baseURI, "erc721:0x", toAsciiString(address(this)), "/", _toString(_tokenId)),
       '"}'
     );
     return string.concat("data:application/json;base64,", Base64.encode(bytes(json)));

@@ -2,23 +2,11 @@
   "name": "img2img-nft",
   "version": "1.0.0",
   "inputs": [
-    {
-      "name": "CHAIN_ID"
-    },
-    {
-      "name": "ADDRESS"
-    },
-    {
-      "name": "TOKEN_ID"
-    },
-    {
-      "name": "INPUT_PROMPT"
-    },
-    {
-      "name": "INPUT_SEED"
-    }
+    "CHAIN_ID=1",
+    "ADDRESS=0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03",
+    "INPUT_PROMPT=a character painted by pablo picasso"
   ],
-  "outputs": [{ "name": "OUTPUT_IMAGE_FILE", "type": "string" }],
+  "outputs": [{ "name": "OUTPUT_IMAGE_FILE", "type": "file" }],
   "steps": [
     {
       "name": "std:nft-resolver",
@@ -30,7 +18,7 @@
     {
       "name": "std:img2img",
       "commands": [
-        "export OUTPUT_IMAGE_FILE=\"$(img2img --image-file=\"$INITIAL_IMAGE_FILE\" --prompt=\"$INPUT_PROMPT\" --seed=$INPUT_SEED)\""
+        "export OUTPUT_IMAGE_FILE=\"$(img2img --image-file=\"$INITIAL_IMAGE_FILE\" --prompt=\"$INPUT_PROMPT\")\""
       ],
       "exports": ["OUTPUT_IMAGE_FILE"]
     }

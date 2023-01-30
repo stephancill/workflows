@@ -14,7 +14,7 @@ const config: UserChugSplashConfig = {
       variables: {
         // ERC721A
         _name: "Workflow Genesis",
-        _symbol: "WRKFLWGEN",
+        _symbol: "WRKGEN",
         _currentIndex: 0,
         _burnCounter: 0,
         _packedOwnerships: {},
@@ -29,7 +29,7 @@ const config: UserChugSplashConfig = {
           version: workflow.version,
         },
         outputs: workflow.outputs.map((output) => output.name),
-        inputs: workflow.inputs.map((inputs) => inputs.name),
+        inputs: workflow.inputs,
         steps: workflow.steps.map((step) => ({
           name: step.name,
           command: JSON.stringify(step.commands[0]),

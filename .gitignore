@@ -24,3 +24,5 @@ artifacts
 .canonical-configs
 
 deployments/hardhat
+
+__pycache__

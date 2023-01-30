@@ -1,6 +1,15 @@
-import { HardhatUserConfig } from "hardhat/config"
+import { HardhatUserConfig, task } from "hardhat/config"
 import "@nomicfoundation/hardhat-toolbox"
 import "@chugsplash/plugins"
+
+// Task that mints a token
+task("mint", "Mints 10 tokens", async (args: { address: string }, hre) => {
+  const { address } = args
+  const [signer] = await hre.ethers.getSigners()
+  const { ethers } = hre
+  const WorkflowToken = await ethers.getContractAt("WorkflowToken", address)
+  await WorkflowToken.connect(signer).mint(1, { value: ethers.utils.parseEther("1") })
+}).addParam("address", "Token address")
 
 const config: HardhatUserConfig = {
   solidity: {

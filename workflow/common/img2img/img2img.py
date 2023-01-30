@@ -45,7 +45,7 @@ def main():
     else:
         image = args.image
     
-    input_str = f"{args.prompt}{args.negative_prompt}{args.width}{args.height}{args.prompt_strength}{args.num_outputs}{args.num_inference_steps}{args.guidance_scale}{args.scheduler}{args.seed}"
+    input_str = f"{image}{args.prompt}{args.negative_prompt}{args.width}{args.height}{args.prompt_strength}{args.num_outputs}{args.num_inference_steps}{args.guidance_scale}{args.scheduler}{args.seed}"
     input_hash = hashlib.sha256(input_str.encode()).hexdigest()
 
     filename = os.path.join(os.getcwd(), "cache", f"{input_hash}.png")
@@ -84,7 +84,6 @@ def main():
     response = requests.post(api_url, data=json.dumps(data).encode(), headers=headers)
     response_data = response.json()
 
-    print(response_data, os.environ)
     prediction_id = response_data["id"]
 
     while True:

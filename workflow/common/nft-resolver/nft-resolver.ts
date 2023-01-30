@@ -5,14 +5,19 @@ import sharp from "sharp"
 import fs from "fs"
 import path from "path"
 
-async function fetchTokenMetadata(chainId: number, tokenAddress: string, tokenId: number) {
+async function fetchTokenMetadata(
+  chainId: number,
+  tokenAddress: string,
+  tokenId: number,
+  rpcUrl: string | undefined = undefined,
+) {
   // TODO: Support multiple networks
-  if (chainId !== 1) {
+  if (chainId !== 1 && !rpcUrl) {
     throw new Error("Unsupported chain ID")
   }
 
   // Connect to the Ethereum network
-  const provider = new ethers.providers.StaticJsonRpcProvider("https://eth.llamarpc.com")
+  const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrl || "https://eth.llamarpc.com")
 
   // Define the ABI for the ERC-721 token contract
   const abi = [
@@ -42,8 +47,8 @@ async function fetchTokenMetadata(chainId: number, tokenAddress: string, tokenId
     throw new Error("Unsupported tokenURI")
   }
 
-  // Return the image URL
-  return metadata.image
+  // Return the metadata
+  return metadata
 }
 
 async function downloadImageAndSave(url: string, directory: string, filename: string) {
@@ -116,10 +121,20 @@ async function downloadImageAndSave(url: string, directory: string, filename: st
         demandOption: true,
         describe: "Token ID",
       },
+      metadataOnly: {
+        type: "boolean",
+        default: false,
+        describe: "Only fetch metadata",
+      },
+      rpcUrl: {
+        type: "string",
+        default: undefined,
+        describe: "RPC URL",
+      },
     })
     .help().argv
 
-  const { chainId, tokenAddress, tokenId } = await argv
+  const { chainId, tokenAddress, tokenId, metadataOnly, rpcUrl } = await argv
 
   // sha256 hash of inputs
   const hash = ethers.utils
@@ -142,10 +157,16 @@ async function downloadImageAndSave(url: string, directory: string, filename: st
     filePath = path.join(cache, filename)
   } else {
     // Call the fetchTokenMetadata function
-    const imageURL = await fetchTokenMetadata(chainId, tokenAddress, tokenId)
+    const metadata = await fetchTokenMetadata(chainId, tokenAddress, tokenId, rpcUrl)
+
+    if (metadataOnly) {
+      // Log the metadata
+      console.log(JSON.stringify(metadata))
+      return
+    }
 
     // Download the image and save to disk
-    filePath = await downloadImageAndSave(imageURL, cache, hash)
+    filePath = await downloadImageAndSave(metadata.image, cache, hash)
   }
 
   // Log the image URL

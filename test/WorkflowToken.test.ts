@@ -15,9 +15,12 @@ describe("WorkflowToken", () => {
   })
 
   it("initializes correctly", async () => {
-    expect(await WorkflowToken.name()).equals(sampleWorkflow.name)
-    expect(await WorkflowToken.symbol()).equals(sampleWorkflow.name)
+    expect(await WorkflowToken.name()).is.not.empty
+    expect(await WorkflowToken.symbol()).is.not.empty
     expect(await WorkflowToken.totalSupply()).equals(0)
+    const workflow = await WorkflowToken.workflow()
+    expect(workflow.name).equals(sampleWorkflow.name)
+    expect(workflow.version).equals(sampleWorkflow.version)
   })
 
   it("produces the correct tokenURI", async () => {
