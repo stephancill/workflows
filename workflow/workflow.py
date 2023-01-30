@@ -29,7 +29,7 @@ with open(".env") as f:
         variables_to_save[name] = value
 
 # Iterate through the steps in the workflow
-for step in workflow["packages"]:
+for step in workflow["steps"]:
     # Check if the step is a built-in step or a custom step
     if step["name"].startswith("std:"):
         # Built-in step, use the provided image

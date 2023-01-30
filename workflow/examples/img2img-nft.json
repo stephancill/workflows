@@ -3,32 +3,27 @@
   "version": "1.0.0",
   "inputs": [
     {
-      "name": "CHAIN_ID",
-      "type": "int"
+      "name": "CHAIN_ID"
     },
     {
-      "name": "ADDRESS",
-      "type": "string"
+      "name": "ADDRESS"
     },
     {
-      "name": "TOKEN_ID",
-      "type": "int"
+      "name": "TOKEN_ID"
     },
     {
-      "name": "INPUT_PROMPT",
-      "type": "string"
+      "name": "INPUT_PROMPT"
     },
     {
-      "name": "INPUT_SEED",
-      "type": "int"
+      "name": "INPUT_SEED"
     }
   ],
   "outputs": [{ "name": "OUTPUT_IMAGE_FILE", "type": "string" }],
-  "packages": [
+  "steps": [
     {
       "name": "std:nft-resolver",
       "commands": [
-        "export INITIAL_IMAGE_FILE=$(node nft-resolver.js --chainId=$CHAIN_ID --tokenAddress=$ADDRESS --tokenId=$TOKEN_ID)"
+        "export INITIAL_IMAGE_FILE=\"$(node nft-resolver.js --chainId=$CHAIN_ID --tokenAddress=$ADDRESS --tokenId=$TOKEN_ID)\""
       ],
       "exports": ["INITIAL_IMAGE_FILE"]
     },

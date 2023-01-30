@@ -17,7 +17,7 @@
       "type": "string"
     }
   ],
-  "packages": [
+  "steps": [
     {
       "name": "download-png",
       "dockerfile": "FROM alpine:latest\nRUN apk add --no-cache bash",

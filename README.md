@@ -38,7 +38,7 @@ An example workflow is described below. It takes an input message and append mes
       "type": "string"
     }
   ],
-  "packages": [
+  "steps": [
     {
       "name": "encode-message",
       "dockerfile": "FROM alpine:latest\nRUN apk add --no-cache bash",

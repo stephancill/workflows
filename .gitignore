@@ -3,7 +3,7 @@ node_modules
 coverage
 coverage.json
 typechain
-typechain-types
+types
 
 # Hardhat files
 cache
@@ -21,3 +21,6 @@ typechain-types
 cache
 artifacts
 
+.canonical-configs
+
+deployments/hardhat

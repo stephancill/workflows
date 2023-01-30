@@ -17,7 +17,7 @@
       "type": "string"
     }
   ],
-  "packages": [
+  "steps": [
     {
       "name": "encode-message",
       "dockerfile": "FROM alpine:latest\nRUN apk add --no-cache bash",
